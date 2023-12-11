@@ -1,0 +1,84 @@
+.container {
+    background-color: rgb(56, 56, 66);
+    width: 350px;
+    height: 780px;
+    opacity: 1;
+    margin: 30px auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    border-radius: 4rem;
+}
+
+.resultados {
+    color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 50px;
+    margin-right: 20px;
+    background-color: transparent;
+    opacity: 0.8;
+    width: 310px;
+    height: 140px;
+}
+
+.resultados h2{
+    font-weight: 100;
+}
+
+.resultados h1{
+    font-weight: 400;
+}
+
+.linha {
+    width: 300px;
+    margin: auto;
+    color: antiquewhite;
+    opacity: 0.5;
+}
+
+.linha2{
+    margin: auto;
+    margin-top: -30px;
+}
+
+.botoesGrupo{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    bottom: 40px;
+}
+
+.botao {
+    width: 70px;
+    height: 70px;
+    border-radius: 10rem;
+    border: none;
+    background-color: rgb(151, 151, 151);
+    box-shadow: 2px 5px 10px 1px rgba(0, 0, 0, 0.2);
+    font-size: 24px;
+    color:antiquewhite;
+    font-weight: 100;
+}
+
+.botaoTop {
+    background-color: antiquewhite;
+    color: rgb(151, 151, 151);
+}
+
+.botaoRight {
+    background-color: rgb(80, 75, 69);
+}
+
+.zero {
+    width: 150px;
+}
+
+.botao:active {
+    opacity: 0.5;
+    box-shadow: none;
+    border-color: black;
+}
