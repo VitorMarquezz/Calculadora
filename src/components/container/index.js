@@ -8,6 +8,8 @@ export default function Container() {
   const [resumoConta, setResumoConta] = useState([0]);
   const [operador, setOperador] = useState("");
   const [zerarNum, setZerarNum] = useState(1);
+  const [teste, setTeste] = useState(0);
+  const [teste2, setTeste2] = useState(0);
 
   function pegarNum(e) {
     if (zerarNum !== 0) {
@@ -15,6 +17,30 @@ export default function Container() {
       setValor(num + e.target.value);
     }
     if (zerarNum === 0) {
+      setNum(e.target.value);
+      setValor(e.target.value);
+    }
+    if (teste2 === 1 && operador === "+") {
+      setNum(parseFloat(valor) + parseFloat(e.target.value));
+      setValor(parseFloat(valor) + parseFloat(e.target.value));
+      setTeste2(0);
+    }
+    if (teste2 === 1 && operador === "-") {
+      setNum(parseFloat(valor) - parseFloat(e.target.value));
+      setValor(parseFloat(valor) - parseFloat(e.target.value));
+      setTeste2(0);
+    }
+    if (teste2 === 1 && operador === "/") {
+      setNum(parseFloat(valor) / parseFloat(e.target.value));
+      setValor(parseFloat(valor) / parseFloat(e.target.value));
+      setTeste2(0);
+    }
+    if (teste2 === 1 && operador === "*") {
+      setNum(parseFloat(valor) * parseFloat(e.target.value));
+      setValor(parseFloat(valor) * parseFloat(e.target.value));
+      setTeste2(0);
+    }
+    if (teste2 === 0) {
       setNum(e.target.value);
       setValor(e.target.value);
     }
@@ -27,37 +53,78 @@ export default function Container() {
     }
     if (resumoConta[0] !== 0 && zerarNum === 0) {
       setResumoConta([e.target.value]);
-      setZerarNum(1)
+      setZerarNum(1);
     }
   }
 
   function fazerOperacao(e) {
     setOperador(e.target.value);
-    setOldNum(num);
-    setNum("");
-    setResumoConta([...resumoConta, e.target.value]);
+    setTeste(teste + 1);
+
+    if (teste === 0) {
+      setOldNum(num);
+      setNum("");
+      setResumoConta([...resumoConta, e.target.value]);
+    }
+
+    if (teste !== 0) {
+      if (operador === "+") {
+        setValor(parseFloat(oldNum) + parseFloat(num));
+        setNum(parseFloat(oldNum) + parseFloat(num));
+        setResumoConta([...resumoConta, "+"]);
+      }
+      if (operador === "-") {
+        setValor(parseFloat(oldNum) - parseFloat(num));
+        setNum(parseFloat(oldNum) - parseFloat(num));
+        setResumoConta([...resumoConta, "-"]);
+      }
+      if (operador === "/") {
+        setValor(parseFloat(oldNum) / parseFloat(num));
+        setNum(parseFloat(oldNum) / parseFloat(num));
+        setResumoConta([...resumoConta, "/"]);
+      }
+      if (operador === "*") {
+        setValor(parseFloat(oldNum) * parseFloat(num));
+        setNum(parseFloat(oldNum) * parseFloat(num));
+        setResumoConta([...resumoConta, "*"]);
+      }
+
+      setTeste(0);
+      setOldNum(num);
+      setNum("");
+      setTeste2(1);
+    }
   }
 
-  function calcular(e) {
-    if (operador === "+") {
-      setValor(parseFloat(oldNum) + parseFloat(num));      
-      setNum(parseFloat(oldNum) + parseFloat(num));
+  function calcular() {
+    
+    if(teste2!==0){
+      if (operador === "+") {
+        setValor(parseFloat(oldNum) + parseFloat(num));
+        setNum(parseFloat(oldNum) + parseFloat(num));
+      }
+      if (operador === "-") {
+        setValor(parseFloat(oldNum) - parseFloat(num));
+        setNum(parseFloat(oldNum) - parseFloat(num));
+      }
+      if (operador === "/") {
+        setValor(parseFloat(oldNum) / parseFloat(num));
+        setNum(parseFloat(oldNum) / parseFloat(num));
+      }
+      if (operador === "*") {
+        setValor(parseFloat(oldNum) * parseFloat(num));
+        setNum(parseFloat(oldNum) * parseFloat(num));
+      }
+      setZerarNum(0);
+      const zerarNum = 0;
+      setResumoConta([...resumoConta, "="]);
+      setTeste(0);
+    }else{
+      setZerarNum(0);
+      const zerarNum = 0;
+      setResumoConta([...resumoConta, "="]);
+      setTeste(0);
     }
-    if (operador === "-") {
-      setValor(parseFloat(oldNum) - parseFloat(num));
-      setNum(parseFloat(oldNum) - parseFloat(num));
-    }
-    if (operador === "/") {
-      setValor(parseFloat(oldNum) / parseFloat(num));
-      setNum(parseFloat(oldNum) / parseFloat(num));
-    }
-    if (operador === "*") {
-      setValor(parseFloat(oldNum) * parseFloat(num));
-      setNum(parseFloat(oldNum) * parseFloat(num));
-    }
-    setZerarNum(0);
-    const zerarNum=0
-    setResumoConta([...resumoConta, '='])
   }
 
   function allClear() {
@@ -66,9 +133,11 @@ export default function Container() {
     setValor(0);
     setResumoConta([0]);
     setOldNum(0);
-    setZerarNum(1)
+    setZerarNum(1);
   }
-
+  console.log(teste, "TESTE");
+  console.log(valor, "VALOR");
+  console.log(teste2, "TESTE2");
   return (
     <div>
       <div className={styles.container}>
