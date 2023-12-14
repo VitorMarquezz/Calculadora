@@ -25,11 +25,19 @@
 
 .resultados h2{
     font-weight: 100;
+    font-size: 30px;
+    opacity: 0.5;
 }
 
 .resultados h1{
     font-weight: 400;
+    max-width: 300px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
+
+
 
 .linha {
     width: 300px;

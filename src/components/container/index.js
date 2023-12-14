@@ -9,123 +9,128 @@ export default function Container() {
   const [operador, setOperador] = useState("");
   const [zerarNum, setZerarNum] = useState(1);
   const [teste, setTeste] = useState(0);
-  const [teste2, setTeste2] = useState(1);
+  const limiteResultado = 999999999999999;
+  const limiteResumo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [guardarValor, setGuardarValor] = useState(0);
+  const [executarOperacaoInicio, setExecutarOperacaoInicio] = useState(0);
+  const [limparResumo, setLimparResumo] = useState(0);
 
   function pegarNum(e) {
-    if (zerarNum !== 0) {
+    if (zerarNum !== 0 && valor <= limiteResultado) {
       setNum(num + e.target.value);
       setValor(num + e.target.value);
     }
-    if (zerarNum === 0) {
+    if (zerarNum === 0 && valor <= limiteResultado) {
       setNum(e.target.value);
       setValor(e.target.value);
-    }
-    if (teste2 === 1 && operador === "+") {
-      setOldNum(parseFloat(valor) + parseFloat(e.target.value));
-      setValor(parseFloat(valor) + parseFloat(e.target.value));
-      setTeste2(1);
-    }
-    if (teste2 === 1 && operador === "-") {
-      setOldNum(parseFloat(valor) - parseFloat(e.target.value));
-      setValor(parseFloat(valor) - parseFloat(e.target.value));
-      setTeste2(1);
-    }
-    if (teste2 === 1 && operador === "/") {
-      setOldNum(parseFloat(valor) / parseFloat(e.target.value));
-      setValor(parseFloat(valor) / parseFloat(e.target.value));
-      setTeste2(1);
-    }
-    if (teste2 === 1 && operador === "*") {
-      setOldNum(parseFloat(valor) * parseFloat(e.target.value));
-      setValor(parseFloat(valor) * parseFloat(e.target.value));
-      setTeste2(1);
-    }
-    if (teste2 === 0) {
-      setNum(num + e.target.value);
-      setValor(num + e.target.value);
     }
 
     if (resumoConta[0] === 0) {
       setResumoConta([e.target.value]);
     }
-    if (resumoConta[0] !== 0) {
-      setResumoConta([...resumoConta, e.target.value]);
-    }
-    if (resumoConta[0] !== 0 && zerarNum === 0) {
+    if (resumoConta[0] !== 0 && limparResumo !== 0) {
       setResumoConta([e.target.value]);
+      setZerarNum(1);
+      setLimparResumo(0)
+    }
+    if (resumoConta[0] !== 0 && limparResumo === 0) {
+      setResumoConta([...resumoConta, e.target.value]);
       setZerarNum(1);
     }
   }
 
   function fazerOperacao(e) {
     setOperador(e.target.value);
-    const teste2 = 1
     setTeste(1);
+    setOldNum(valor);
+    setValor(0);
+    setZerarNum(0);
 
     if (teste === 0) {
-      setOldNum(num);
-      setNum("");
+      if (operador === "+") {
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+      }
+      if (operador === "-") {
+        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
+      }
+
       setResumoConta([...resumoConta, e.target.value]);
     }
 
-    if (teste !== 0) {
+    if (teste !== 0 && executarOperacaoInicio === 0) {
       if (operador === "+") {
-        // setValor(parseFloat(oldNum) + parseFloat(num));
-        // setNum(parseFloat(oldNum) + parseFloat(num));
+        setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
+        const guardarValor = parseFloat(oldNum) + parseFloat(valor);
+        setResumoConta([...resumoConta, "+"]);
+        setTeste(0);
+        setExecutarOperacaoInicio(1);
+      }
+      if (operador === "-") {
+        setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
+        const guardarValor = parseFloat(oldNum) - parseFloat(valor);
+        setResumoConta([...resumoConta, "-"]);
+        setTeste(0);
+        setExecutarOperacaoInicio(1);
+      }
+    }
+
+    if (teste !== 0 && executarOperacaoInicio === 1) {
+      if (operador === "+") {
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
         setResumoConta([...resumoConta, "+"]);
       }
       if (operador === "-") {
-        // setValor(parseFloat(oldNum) - parseFloat(num));
-        // setNum(parseFloat(oldNum) - parseFloat(num));
+        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
         setResumoConta([...resumoConta, "-"]);
       }
-      if (operador === "/") {
-        // setValor(parseFloat(oldNum) / parseFloat(num));
-        // setNum(parseFloat(oldNum) / parseFloat(num));
-        setResumoConta([...resumoConta, "/"]);
-      }
-      if (operador === "*") {
-        // setValor(parseFloat(oldNum) * parseFloat(num));
-        // setNum(parseFloat(oldNum) * parseFloat(num));
-        setResumoConta([...resumoConta, "*"]);
-      }
-
       setTeste(0);
-      setOldNum(num);
-      setNum("");
-      setTeste2(1);
+      setExecutarOperacaoInicio(1);
     }
   }
 
   function calcular() {
-    
-    if(teste2===0){
+    if (teste === 0) {
       if (operador === "+") {
-        setValor(parseFloat(oldNum) + parseFloat(num));
-        setNum(parseFloat(oldNum) + parseFloat(num));
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
-        setValor(parseFloat(oldNum) - parseFloat(num));
-        setNum(parseFloat(oldNum) - parseFloat(num));
+        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
       }
-      if (operador === "/") {
-        setValor(parseFloat(oldNum) / parseFloat(num));
-        setNum(parseFloat(oldNum) / parseFloat(num));
-      }
-      if (operador === "*") {
-        setValor(parseFloat(oldNum) * parseFloat(num));
-        setNum(parseFloat(oldNum) * parseFloat(num));
-      }
-      setZerarNum(0);
-      const zerarNum = 0;
+
       setResumoConta([...resumoConta, "="]);
-      setTeste(0);
-    }else{
-      setZerarNum(0);
-      const zerarNum = 0;
-      setResumoConta([...resumoConta, "="]);
-      setTeste(0);
     }
+    if (teste !== 0 && executarOperacaoInicio === 0) {
+      if (operador === "+") {
+        setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
+        const guardarValor = parseFloat(oldNum) + parseFloat(valor);
+        setResumoConta([...resumoConta, "="]);
+        setTeste(0);
+        setExecutarOperacaoInicio(1);
+      }
+      if (operador === "-") {
+        setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
+        const guardarValor = parseFloat(oldNum) - parseFloat(valor);
+        setResumoConta([...resumoConta, "="]);
+        setTeste(0);
+        setExecutarOperacaoInicio(1);
+      }
+    }
+
+    if (teste !== 0 && executarOperacaoInicio === 1) {
+      if (operador === "+") {
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResumoConta([...resumoConta, "="]);
+      }
+      if (operador === "-") {
+        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
+        setResumoConta([...resumoConta, "="]);
+      }
+      setTeste(0);
+      setExecutarOperacaoInicio(1);
+    }
+    setZerarNum(0);
+    setLimparResumo(1);
+    console.log(zerarNum);
   }
 
   function allClear() {
@@ -135,10 +140,10 @@ export default function Container() {
     setResumoConta([0]);
     setOldNum(0);
     setZerarNum(1);
-    setTeste2(0)
-    setTeste(0)
+    setTeste(0);
+    setExecutarOperacaoInicio(0);
+    setGuardarValor(0);
   }
-  
 
   return (
     <div>
@@ -148,7 +153,7 @@ export default function Container() {
             <h2>{resumoConta}</h2>
           </div>
           <div>
-            <h1>{valor}</h1>
+            <h1>{guardarValor}</h1>
           </div>
         </div>
 
