@@ -14,15 +14,18 @@ export default function Container() {
   const [guardarValor, setGuardarValor] = useState(0);
   const [executarOperacaoInicio, setExecutarOperacaoInicio] = useState(0);
   const [limparResumo, setLimparResumo] = useState(0);
+  const [resultadoAmostra, setResultadoAmostra] = useState(0);
 
   function pegarNum(e) {
     if (zerarNum !== 0 && valor <= limiteResultado) {
       setNum(num + e.target.value);
       setValor(num + e.target.value);
+      setResultadoAmostra(num + e.target.value);
     }
     if (zerarNum === 0 && valor <= limiteResultado) {
       setNum(e.target.value);
       setValor(e.target.value);
+      setResultadoAmostra(e.target.value);
     }
 
     if (resumoConta[0] === 0) {
@@ -31,7 +34,7 @@ export default function Container() {
     if (resumoConta[0] !== 0 && limparResumo !== 0) {
       setResumoConta([e.target.value]);
       setZerarNum(1);
-      setLimparResumo(0)
+      setLimparResumo(0);
     }
     if (resumoConta[0] !== 0 && limparResumo === 0) {
       setResumoConta([...resumoConta, e.target.value]);
@@ -46,29 +49,82 @@ export default function Container() {
     setValor(0);
     setZerarNum(0);
 
-    if (teste === 0) {
+    if (teste === 0 && executarOperacaoInicio === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
+      }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+      }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
       }
 
       setResumoConta([...resumoConta, e.target.value]);
     }
 
+    if (teste === 0 && executarOperacaoInicio !== 0) {
+      if (operador === "+") {
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
+        setResumoConta([
+          parseFloat(guardarValor) + parseFloat(valor),
+          e.target.value,
+        ]);
+      }
+      if (operador === "-") {
+        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
+        setResumoConta([
+          parseFloat(guardarValor) - parseFloat(valor),
+          e.target.value,
+        ]);
+      }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+        setResumoConta([
+          parseFloat(guardarValor) / parseFloat(valor),
+          e.target.value,
+        ]);
+      }
+    }
+
     if (teste !== 0 && executarOperacaoInicio === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
-        const guardarValor = parseFloat(oldNum) + parseFloat(valor);
-        setResumoConta([...resumoConta, "+"]);
+        setResultadoAmostra(parseFloat(oldNum) + parseFloat(valor));
+        setResumoConta([
+          parseFloat(oldNum) + parseFloat(valor),
+          e.target.value,
+        ]);
         setTeste(0);
         setExecutarOperacaoInicio(1);
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
-        const guardarValor = parseFloat(oldNum) - parseFloat(valor);
-        setResumoConta([...resumoConta, "-"]);
+        setResultadoAmostra(parseFloat(oldNum) - parseFloat(valor));
+        setResumoConta([
+          parseFloat(oldNum) - parseFloat(valor),
+          e.target.value,
+        ]);
+        setTeste(0);
+        setExecutarOperacaoInicio(1);
+      }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(oldNum) / parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) / parseFloat(valor));
+        setResumoConta([
+          parseFloat(oldNum) / parseFloat(valor),
+          e.target.value,
+        ]);
         setTeste(0);
         setExecutarOperacaoInicio(1);
       }
@@ -77,12 +133,23 @@ export default function Container() {
     if (teste !== 0 && executarOperacaoInicio === 1) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
-        setResumoConta([...resumoConta, "+"]);
+        setResumoConta([
+          parseFloat(guardarValor) + parseFloat(valor),
+          e.target.value,
+        ]);
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
-        setResumoConta([...resumoConta, "-"]);
+        setResumoConta([parseFloat(guardarValor) - parseFloat(valor), "-"]);
+        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
       }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
+        setResumoConta([parseFloat(guardarValor) / parseFloat(valor), "/"]);
+        setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+      }
+
       setTeste(0);
       setExecutarOperacaoInicio(1);
     }
@@ -92,45 +159,73 @@ export default function Container() {
     if (teste === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
       }
-
-      setResumoConta([...resumoConta, "="]);
+      if (operador === "/") {
+        setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+      }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
+      }
     }
+
     if (teste !== 0 && executarOperacaoInicio === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
-        const guardarValor = parseFloat(oldNum) + parseFloat(valor);
-        setResumoConta([...resumoConta, "="]);
-        setTeste(0);
-        setExecutarOperacaoInicio(1);
+        setResultadoAmostra(parseFloat(oldNum) + parseFloat(valor));
+        setResumoConta([parseFloat(oldNum) + parseFloat(valor)]);
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
-        const guardarValor = parseFloat(oldNum) - parseFloat(valor);
-        setResumoConta([...resumoConta, "="]);
-        setTeste(0);
-        setExecutarOperacaoInicio(1);
+        setResultadoAmostra(parseFloat(oldNum) - parseFloat(valor));
+        setResumoConta([parseFloat(oldNum) - parseFloat(valor)]);
       }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(oldNum) / parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) / parseFloat(valor));
+        setResumoConta([parseFloat(oldNum) / parseFloat(valor)]);
+      }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(oldNum) * parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) * parseFloat(valor));
+        setResumoConta([parseFloat(oldNum) * parseFloat(valor)]);
+      }
+
+      setTeste(0);
+      setExecutarOperacaoInicio(1);
     }
 
     if (teste !== 0 && executarOperacaoInicio === 1) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
-        setResumoConta([...resumoConta, "="]);
+        setResumoConta([parseFloat(guardarValor) + parseFloat(valor)]);
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
-        setResumoConta([...resumoConta, "="]);
+        setResumoConta([parseFloat(guardarValor) - parseFloat(valor)]);
+        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
       }
+      if (operador === "/") {
+        setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
+        setResumoConta([parseFloat(guardarValor) / parseFloat(valor)]);
+        setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+      }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
+        setResumoConta([parseFloat(guardarValor) * parseFloat(valor)]);
+        setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
+      }
+
       setTeste(0);
       setExecutarOperacaoInicio(1);
     }
-    setZerarNum(0);
-    setLimparResumo(1);
-    console.log(zerarNum);
   }
 
   function allClear() {
@@ -143,6 +238,12 @@ export default function Container() {
     setTeste(0);
     setExecutarOperacaoInicio(0);
     setGuardarValor(0);
+    setResultadoAmostra(0);
+  }
+
+  function porcentagem() {
+    // setResultadoAmostra(valor + '%');
+    // setResumoConta(valor + '%')
   }
 
   return (
@@ -153,7 +254,8 @@ export default function Container() {
             <h2>{resumoConta}</h2>
           </div>
           <div>
-            <h1>{guardarValor}</h1>
+            {/* <h1>{guardarValor}</h1> */}
+            <h1>{resultadoAmostra}</h1>
           </div>
         </div>
 
@@ -175,7 +277,11 @@ export default function Container() {
           >
             +/-
           </button>
-          <button value={"%"} className={`${styles.botao} ${styles.botaoTop}`}>
+          <button
+            value={"%"}
+            onClick={porcentagem}
+            className={`${styles.botao} ${styles.botaoTop}`}
+          >
             %
           </button>
           <button
