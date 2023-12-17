@@ -7,25 +7,35 @@ export default function Container() {
   const [valor, setValor] = useState(0);
   const [resumoConta, setResumoConta] = useState([0]);
   const [operador, setOperador] = useState("");
-  const [zerarNum, setZerarNum] = useState(1);
+  const [zerarNum, setZerarNum] = useState(0);
   const [teste, setTeste] = useState(0);
-  const limiteResultado = 999999999999999;
-  const limiteResumo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [limiteResultado, setLimiteResultado] = useState([0]);
+  const [limiteTamanhoResultado, setLimiteResumo] = useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+  ]);
   const [guardarValor, setGuardarValor] = useState(0);
   const [executarOperacaoInicio, setExecutarOperacaoInicio] = useState(0);
   const [limparResumo, setLimparResumo] = useState(0);
   const [resultadoAmostra, setResultadoAmostra] = useState(0);
 
   function pegarNum(e) {
-    if (zerarNum !== 0 && valor <= limiteResultado) {
+    if (zerarNum !== 0 && limiteResultado.length <= limiteTamanhoResultado.length) {
+      setLimiteResultado([...limiteResultado, e.target.value]);
       setNum(num + e.target.value);
       setValor(num + e.target.value);
       setResultadoAmostra(num + e.target.value);
+      if (operador === "-") {
+        setResultadoAmostra(-(num + e.target.value));
+      }
     }
-    if (zerarNum === 0 && valor <= limiteResultado) {
+    if (zerarNum === 0) {
       setNum(e.target.value);
       setValor(e.target.value);
       setResultadoAmostra(e.target.value);
+      setZerarNum(1);
+      if(operador==='-'){
+        setResultadoAmostra(-e.target.value);
+      }
     }
 
     if (resumoConta[0] === 0) {
@@ -36,7 +46,11 @@ export default function Container() {
       setZerarNum(1);
       setLimparResumo(0);
     }
-    if (resumoConta[0] !== 0 && limparResumo === 0) {
+    if (
+      resumoConta[0] !== 0 &&
+      limparResumo === 0 &&
+      limiteResultado.length <= limiteTamanhoResultado.length
+    ) {
       setResumoConta([...resumoConta, e.target.value]);
       setZerarNum(1);
     }
@@ -95,6 +109,14 @@ export default function Container() {
           e.target.value,
         ]);
       }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
+        setResumoConta([
+          parseFloat(guardarValor) * parseFloat(valor),
+          e.target.value,
+        ]);
+      }
     }
 
     if (teste !== 0 && executarOperacaoInicio === 0) {
@@ -105,8 +127,6 @@ export default function Container() {
           parseFloat(oldNum) + parseFloat(valor),
           e.target.value,
         ]);
-        setTeste(0);
-        setExecutarOperacaoInicio(1);
       }
       if (operador === "-") {
         setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
@@ -115,8 +135,6 @@ export default function Container() {
           parseFloat(oldNum) - parseFloat(valor),
           e.target.value,
         ]);
-        setTeste(0);
-        setExecutarOperacaoInicio(1);
       }
       if (operador === "/") {
         setGuardarValor(parseFloat(oldNum) / parseFloat(valor));
@@ -125,9 +143,21 @@ export default function Container() {
           parseFloat(oldNum) / parseFloat(valor),
           e.target.value,
         ]);
-        setTeste(0);
-        setExecutarOperacaoInicio(1);
       }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(oldNum) * parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) * parseFloat(valor));
+        setResumoConta([
+          parseFloat(oldNum) * parseFloat(valor),
+          e.target.value,
+        ]);
+      }
+      setTeste(0);
+      setExecutarOperacaoInicio(1);
+      setTeste(0);
+      setExecutarOperacaoInicio(1);
+      setTeste(0);
+      setExecutarOperacaoInicio(1);
     }
 
     if (teste !== 0 && executarOperacaoInicio === 1) {
@@ -148,6 +178,11 @@ export default function Container() {
         setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
         setResumoConta([parseFloat(guardarValor) / parseFloat(valor), "/"]);
         setResultadoAmostra(parseFloat(guardarValor) / parseFloat(valor));
+      }
+      if (operador === "*") {
+        setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
+        setResumoConta([parseFloat(guardarValor) * parseFloat(valor), "/"]);
+        setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
       }
 
       setTeste(0);
@@ -239,11 +274,57 @@ export default function Container() {
     setExecutarOperacaoInicio(0);
     setGuardarValor(0);
     setResultadoAmostra(0);
+    setLimiteResultado([0]);
+  }
+
+  function inverterSinal() {
+    setGuardarValor(-guardarValor);
+    setNum(-num);
+    setResultadoAmostra(-resultadoAmostra);
+    setValor(-valor);
+
+    resumoConta.forEach((element, index) => {
+      switch(element) {
+        case '-':
+          resumoConta.splice(index, 1, "+");
+          break;
+        case '+':
+          resumoConta.splice(index, 1, '-')
+          break
+        default:
+          break
+        
+      }
+    });
   }
 
   function porcentagem() {
-    // setResultadoAmostra(valor + '%');
-    // setResumoConta(valor + '%')
+    if (teste === 0) {
+      setValor(valor / 100);
+      setResultadoAmostra(valor / 100);
+      setResumoConta(valor / 100);
+      setZerarNum(0);
+    }
+    if (teste !== 0) {
+      if (operador === "+") {
+        setResultadoAmostra(
+          parseFloat(oldNum) + (parseFloat(oldNum) * parseFloat(valor)) / 100
+        );
+      }
+      if (operador === "-") {
+        setResultadoAmostra(
+          parseFloat(oldNum) - (parseFloat(oldNum) * parseFloat(valor)) / 100
+        );
+      }
+      if (operador === "/") {
+        setResultadoAmostra(
+          parseFloat(oldNum) / ((parseFloat(valor) / 100) * parseFloat(oldNum))
+        );
+      }
+      if (operador === "*") {
+        setResultadoAmostra((parseFloat(oldNum) * parseFloat(valor)) / 100);
+      }
+    }
   }
 
   return (
@@ -254,7 +335,6 @@ export default function Container() {
             <h2>{resumoConta}</h2>
           </div>
           <div>
-            {/* <h1>{guardarValor}</h1> */}
             <h1>{resultadoAmostra}</h1>
           </div>
         </div>
@@ -273,6 +353,7 @@ export default function Container() {
           </button>
           <button
             value={"+/-"}
+            onClick={inverterSinal}
             className={`${styles.botao} ${styles.botaoTop}`}
           >
             +/-
@@ -346,7 +427,7 @@ export default function Container() {
           >
             0
           </button>
-          <button value={"."} className={styles.botao}>
+          <button value={"."} onClick={pegarNum} className={styles.botao}>
             .
           </button>
           <button
