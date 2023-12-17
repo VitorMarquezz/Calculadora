@@ -2,11 +2,11 @@ import { useState } from "react";
 import styles from "./Container.module.css";
 
 export default function Container() {
-  const [num, setNum] = useState("");
+  const [num, setNum] = useState('');
   const [oldNum, setOldNum] = useState(0);
   const [valor, setValor] = useState(0);
   const [resumoConta, setResumoConta] = useState([0]);
-  const [operador, setOperador] = useState("");
+  const [operador, setOperador] = useState('');
   const [zerarNum, setZerarNum] = useState(0);
   const [teste, setTeste] = useState(0);
   const [limiteResultado, setLimiteResultado] = useState([0]);
@@ -17,6 +17,7 @@ export default function Container() {
   const [executarOperacaoInicio, setExecutarOperacaoInicio] = useState(0);
   const [limparResumo, setLimparResumo] = useState(0);
   const [resultadoAmostra, setResultadoAmostra] = useState(0);
+  const [breakCalcular, setBreakCalcular] = useState(0);
 
   function pegarNum(e) {
     if (zerarNum !== 0 && limiteResultado.length <= limiteTamanhoResultado.length) {
@@ -35,12 +36,21 @@ export default function Container() {
       setZerarNum(1);
       if(operador==='-'){
         setResultadoAmostra(-e.target.value);
+        const trocarSinalResumo = (-e.target.value);
+        setResumoConta([trocarSinalResumo])
+        const resumoConta = [trocarSinalResumo]
+        
       }
     }
 
     if (resumoConta[0] === 0) {
+      if (operador === "-") {
+        const trocarSinalResumo = -e.target.value;
+        setResumoConta([trocarSinalResumo]);
+        const resumoConta = [trocarSinalResumo];
+      }else{
       setResumoConta([e.target.value]);
-    }
+    }}
     if (resumoConta[0] !== 0 && limparResumo !== 0) {
       setResumoConta([e.target.value]);
       setZerarNum(1);
@@ -84,7 +94,7 @@ export default function Container() {
       setResumoConta([...resumoConta, e.target.value]);
     }
 
-    if (teste === 0 && executarOperacaoInicio !== 0) {
+    if (teste === 0 && executarOperacaoInicio !== 0 && breakCalcular===0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
         setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
@@ -117,6 +127,10 @@ export default function Container() {
           e.target.value,
         ]);
       }
+    }
+
+    if (teste === 0 && executarOperacaoInicio !== 0 && breakCalcular === 1) {
+      setResumoConta([...resumoConta, e.target.value])
     }
 
     if (teste !== 0 && executarOperacaoInicio === 0) {
@@ -154,10 +168,6 @@ export default function Container() {
       }
       setTeste(0);
       setExecutarOperacaoInicio(1);
-      setTeste(0);
-      setExecutarOperacaoInicio(1);
-      setTeste(0);
-      setExecutarOperacaoInicio(1);
     }
 
     if (teste !== 0 && executarOperacaoInicio === 1) {
@@ -187,10 +197,12 @@ export default function Container() {
 
       setTeste(0);
       setExecutarOperacaoInicio(1);
+      setBreakCalcular(0)
     }
   }
 
   function calcular() {
+    setBreakCalcular(1)
     if (teste === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
@@ -264,8 +276,8 @@ export default function Container() {
   }
 
   function allClear() {
-    setNum("");
-    setOperador("");
+    setNum('');
+    setOperador('');
     setValor(0);
     setResumoConta([0]);
     setOldNum(0);
@@ -278,11 +290,12 @@ export default function Container() {
   }
 
   function inverterSinal() {
-    setGuardarValor(-guardarValor);
+    setGuardarValor(guardarValor);
     setNum(-num);
     setResultadoAmostra(-resultadoAmostra);
     setValor(-valor);
 
+    if(resumoConta.length>=2 && operador){
     resumoConta.forEach((element, index) => {
       switch(element) {
         case '-':
@@ -292,10 +305,15 @@ export default function Container() {
           resumoConta.splice(index, 1, '-')
           break
         default:
-          break
-        
+          break        
       }
     });
+  }
+  if(operador===''){
+    const juntarElementos = -resumoConta.join('');
+    setResumoConta([juntarElementos])
+
+  }
   }
 
   function porcentagem() {
