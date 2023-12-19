@@ -192,7 +192,7 @@ export default function Container() {
       if (operador === "-") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
         setResumoConta([parseFloat(guardarValor) + parseFloat(valor), "-"]);
-        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "/") {
         setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
@@ -265,9 +265,9 @@ export default function Container() {
         setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "-") {
-        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
-        setResumoConta([parseFloat(guardarValor) - parseFloat(valor)]);
-        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResumoConta([parseFloat(guardarValor) + parseFloat(valor)]);
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
       }
       if (operador === "/") {
         setGuardarValor(parseFloat(guardarValor) / parseFloat(valor));
