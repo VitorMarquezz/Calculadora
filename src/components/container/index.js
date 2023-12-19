@@ -305,9 +305,14 @@ export default function Container() {
       setValor(-valor);
       setNum(-num);
       setResultadoAmostra(-resultadoAmostra);
+      setGuardarValor(-guardarValor);
     }
     if (operador === "") {
-      alert("ERRO");
+      setValor(-valor);
+      setNum(-num);
+      setResultadoAmostra(-resultadoAmostra);
+      setResumoConta([-resultadoAmostra])
+      setGuardarValor(-guardarValor)
     }
 
     if (resumoConta.length >= 2 && operador) {
