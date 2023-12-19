@@ -44,6 +44,7 @@ export default function Container() {
       setZerarNum(1);
       if (operador === "-") {
         setResultadoAmostra(-e.target.value);
+        setValor(-e.target.value)
         const trocarSinalResumo = -e.target.value;
         setResumoConta([trocarSinalResumo]);
       }
