@@ -2,17 +2,17 @@ import { useState } from "react";
 import styles from "./Container.module.css";
 
 export default function Container() {
-  const [num, setNum] = useState('');
+  const [num, setNum] = useState("");
   const [oldNum, setOldNum] = useState(0);
   const [valor, setValor] = useState(0);
   const [resumoConta, setResumoConta] = useState([0]);
-  const [operador, setOperador] = useState('');
+  const [operador, setOperador] = useState("");
   const [zerarNum, setZerarNum] = useState(0);
   const [teste, setTeste] = useState(0);
   const [limiteResultado, setLimiteResultado] = useState([0]);
-  const [limiteTamanhoResultado, setLimiteResumo] = useState([
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-  ]);
+  const limiteTamanhoResultado = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16
+  ];
   const [guardarValor, setGuardarValor] = useState(0);
   const [executarOperacaoInicio, setExecutarOperacaoInicio] = useState(0);
   const [limparResumo, setLimparResumo] = useState(0);
@@ -20,11 +20,19 @@ export default function Container() {
   const [breakCalcular, setBreakCalcular] = useState(0);
 
   function pegarNum(e) {
-    if (zerarNum !== 0 && limiteResultado.length <= limiteTamanhoResultado.length) {
+    if (
+      zerarNum !== 0 &&
+      limiteResultado.length <= limiteTamanhoResultado.length
+    ) {
       setLimiteResultado([...limiteResultado, e.target.value]);
       setNum(num + e.target.value);
-      setValor(num + e.target.value);
-      setResultadoAmostra(num + e.target.value);
+      setValor(resultadoAmostra + e.target.value);
+      if (resultadoAmostra === 0) {
+        setResultadoAmostra(e.target.value);
+      }
+      if (resultadoAmostra !== 0) {
+        setResultadoAmostra(resultadoAmostra + e.target.value);
+      }
       if (operador === "-") {
         setResultadoAmostra(-(num + e.target.value));
       }
@@ -34,12 +42,10 @@ export default function Container() {
       setValor(e.target.value);
       setResultadoAmostra(e.target.value);
       setZerarNum(1);
-      if(operador==='-'){
+      if (operador === "-") {
         setResultadoAmostra(-e.target.value);
-        const trocarSinalResumo = (-e.target.value);
-        setResumoConta([trocarSinalResumo])
-        const resumoConta = [trocarSinalResumo]
-        
+        const trocarSinalResumo = -e.target.value;
+        setResumoConta([trocarSinalResumo]);
       }
     }
 
@@ -47,10 +53,10 @@ export default function Container() {
       if (operador === "-") {
         const trocarSinalResumo = -e.target.value;
         setResumoConta([trocarSinalResumo]);
-        const resumoConta = [trocarSinalResumo];
-      }else{
-      setResumoConta([e.target.value]);
-    }}
+      } else {
+        setResumoConta([e.target.value]);
+      }
+    }
     if (resumoConta[0] !== 0 && limparResumo !== 0) {
       setResumoConta([e.target.value]);
       setZerarNum(1);
@@ -90,11 +96,15 @@ export default function Container() {
         setGuardarValor(parseFloat(guardarValor) * parseFloat(valor));
         setResultadoAmostra(parseFloat(guardarValor) * parseFloat(valor));
       }
-
-      setResumoConta([...resumoConta, e.target.value]);
+      if (resultadoAmostra === 0) {
+        setResultadoAmostra("ERRO");
+        setResumoConta(["ERRO"]);
+      } else if (resultadoAmostra !== 0) {
+        setResumoConta([...resumoConta, e.target.value]);
+      }
     }
 
-    if (teste === 0 && executarOperacaoInicio !== 0 && breakCalcular===0) {
+    if (teste === 0 && executarOperacaoInicio !== 0 && breakCalcular === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
         setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
@@ -104,10 +114,10 @@ export default function Container() {
         ]);
       }
       if (operador === "-") {
-        setGuardarValor(parseFloat(guardarValor) - parseFloat(valor));
-        setResultadoAmostra(parseFloat(guardarValor) - parseFloat(valor));
+        setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(guardarValor) + parseFloat(valor));
         setResumoConta([
-          parseFloat(guardarValor) - parseFloat(valor),
+          parseFloat(guardarValor) + parseFloat(valor),
           e.target.value,
         ]);
       }
@@ -129,8 +139,8 @@ export default function Container() {
       }
     }
 
-    if (teste === 0 && executarOperacaoInicio !== 0 && breakCalcular === 1) {
-      setResumoConta([...resumoConta, e.target.value])
+    if (teste === 0 && executarOperacaoInicio === 1 && breakCalcular === 1) {
+      setResumoConta([...resumoConta, e.target.value]);
     }
 
     if (teste !== 0 && executarOperacaoInicio === 0) {
@@ -142,11 +152,11 @@ export default function Container() {
           e.target.value,
         ]);
       }
-      if (operador === "-") {
-        setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
-        setResultadoAmostra(parseFloat(oldNum) - parseFloat(valor));
+      if (operador === "-" && oldNum !== 0) {
+        setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) + parseFloat(valor));
         setResumoConta([
-          parseFloat(oldNum) - parseFloat(valor),
+          parseFloat(oldNum) + parseFloat(valor),
           e.target.value,
         ]);
       }
@@ -197,12 +207,12 @@ export default function Container() {
 
       setTeste(0);
       setExecutarOperacaoInicio(1);
-      setBreakCalcular(0)
+      setBreakCalcular(0);
     }
   }
 
   function calcular() {
-    setBreakCalcular(1)
+    setBreakCalcular(1);
     if (teste === 0) {
       if (operador === "+") {
         setGuardarValor(parseFloat(guardarValor) + parseFloat(valor));
@@ -229,9 +239,9 @@ export default function Container() {
         setResumoConta([parseFloat(oldNum) + parseFloat(valor)]);
       }
       if (operador === "-") {
-        setGuardarValor(parseFloat(oldNum) - parseFloat(valor));
-        setResultadoAmostra(parseFloat(oldNum) - parseFloat(valor));
-        setResumoConta([parseFloat(oldNum) - parseFloat(valor)]);
+        setGuardarValor(parseFloat(oldNum) + parseFloat(valor));
+        setResultadoAmostra(parseFloat(oldNum) + parseFloat(valor));
+        setResumoConta([parseFloat(oldNum) + parseFloat(valor)]);
       }
       if (operador === "/") {
         setGuardarValor(parseFloat(oldNum) / parseFloat(valor));
@@ -273,11 +283,12 @@ export default function Container() {
       setTeste(0);
       setExecutarOperacaoInicio(1);
     }
+    setOperador("");
   }
 
   function allClear() {
-    setNum('');
-    setOperador('');
+    setNum("");
+    setOperador("");
     setValor(0);
     setResumoConta([0]);
     setOldNum(0);
@@ -290,37 +301,36 @@ export default function Container() {
   }
 
   function inverterSinal() {
-    setGuardarValor(guardarValor);
-    setNum(-num);
-    setResultadoAmostra(-resultadoAmostra);
-    setValor(-valor);
+    if (operador !== "") {
+      setValor(-valor);
+      setNum(-num);
+      setResultadoAmostra(-resultadoAmostra);
+    }
+    if (operador === "") {
+      alert("ERRO");
+    }
 
-    if(resumoConta.length>=2 && operador){
-    resumoConta.forEach((element, index) => {
-      switch(element) {
-        case '-':
-          resumoConta.splice(index, 1, "+");
-          break;
-        case '+':
-          resumoConta.splice(index, 1, '-')
-          break
-        default:
-          break        
-      }
-    });
-  }
-  if(operador===''){
-    const juntarElementos = -resumoConta.join('');
-    setResumoConta([juntarElementos])
-
-  }
+    if (resumoConta.length >= 2 && operador) {
+      resumoConta.forEach((element, index) => {
+        switch (element) {
+          case "-":
+            resumoConta.splice(index, 1, "+");
+            break;
+          case "+":
+            resumoConta.splice(index, 1, "-");
+            break;
+          default:
+            break;
+        }
+      });
+    }
   }
 
   function porcentagem() {
     if (teste === 0) {
-      setValor(valor / 100);
-      setResultadoAmostra(valor / 100);
-      setResumoConta(valor / 100);
+      setValor(resultadoAmostra / 100);
+      setResultadoAmostra(resultadoAmostra / 100);
+      setResumoConta([resultadoAmostra / 100]);
       setZerarNum(0);
     }
     if (teste !== 0) {
@@ -335,13 +345,14 @@ export default function Container() {
         );
       }
       if (operador === "/") {
-        setResultadoAmostra(
-          parseFloat(oldNum) / ((parseFloat(valor) / 100) * parseFloat(oldNum))
-        );
+        setResultadoAmostra(oldNum / ((valor / 100) * oldNum));
       }
       if (operador === "*") {
-        setResultadoAmostra((parseFloat(oldNum) * parseFloat(valor)) / 100);
+        setResultadoAmostra(
+          (parseFloat(oldNum) * (parseFloat(oldNum) * parseFloat(valor))) / 100
+        );
       }
+      setResumoConta([...resumoConta, "%"]);
     }
   }
 
